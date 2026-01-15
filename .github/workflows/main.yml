@@ -24,7 +24,7 @@ jobs:
         run: npm ci
 
       - name: Build application
-        run: npm run build
+        run: npm run dist
 
       - name: Create deb package structure
         run: |
@@ -34,10 +34,16 @@ jobs:
           mkdir -p teams-deb/usr/share/applications
           mkdir -p teams-deb/usr/share/icons/hicolor/256x256/apps
 
+          # Copy build output
           cp -r dist/* teams-deb/opt/teams/
+          
+          # Desktop entry
           cp teams.desktop teams-deb/usr/share/applications/
+          
+          # Icon
           cp icon.png teams-deb/usr/share/icons/hicolor/256x256/apps/teams.png || true
 
+          # DEBIAN/control
           cat <<EOF > teams-deb/DEBIAN/control
           Package: teams-linux
           Version: ${VERSION}
