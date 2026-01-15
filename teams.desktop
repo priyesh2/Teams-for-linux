@@ -1,7 +1,7 @@
 [Desktop Entry]
 Name=Microsoft Teams
 Comment=Microsoft Teams Client
-Exec=electron /path/to/teams-client
+Exec=/opt/teams/teams
 Icon=teams
 Terminal=false
 Type=Application
