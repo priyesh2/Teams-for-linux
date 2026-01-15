@@ -1,0 +1,30 @@
+{
+  "name": "teams",
+  "version": "1.0.0",
+  "description": "Microsoft Teams Client for Linux",
+  "author": "Cerebro <cerebro@example.com>",
+  "homepage": "https://github.com/cerebro/teams-linux",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "dist": "electron-builder",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "build": {
+    "appId": "com.microsoft.teams.linux",
+    "productName": "Microsoft Teams (Linux)",
+    "linux": {
+      "target": [
+        "AppImage",
+        "deb"
+      ],
+      "category": "Network",
+      "maintainer": "Cerebro <cerebro@example.com>"
+    }
+  },
+  "license": "ISC",
+  "devDependencies": {
+    "electron": "^39.2.7",
+    "electron-builder": "^24.13.3"
+  }
+}

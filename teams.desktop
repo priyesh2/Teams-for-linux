@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=Microsoft Teams
+Comment=Microsoft Teams Client
+Exec=electron /path/to/teams-client
+Icon=teams
+Terminal=false
+Type=Application
+Categories=Network;InstantMessaging;
+StartupNotify=true
