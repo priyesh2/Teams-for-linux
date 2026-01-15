@@ -1,0 +1,63 @@
+name: Build and Release Debian Package
+
+on:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  build-deb:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build application
+        run: npm run build
+
+      - name: Create deb package structure
+        run: |
+          VERSION=${GITHUB_REF_NAME#v}
+          mkdir -p teams-deb/DEBIAN
+          mkdir -p teams-deb/opt/teams
+          mkdir -p teams-deb/usr/share/applications
+          mkdir -p teams-deb/usr/share/icons/hicolor/256x256/apps
+
+          cp -r dist/* teams-deb/opt/teams/
+          cp teams.desktop teams-deb/usr/share/applications/
+          cp icon.png teams-deb/usr/share/icons/hicolor/256x256/apps/teams.png || true
+
+          cat <<EOF > teams-deb/DEBIAN/control
+          Package: teams-linux
+          Version: ${VERSION}
+          Section: net
+          Priority: optional
+          Architecture: amd64
+          Maintainer: Priyesh P
+          Description: Microsoft Teams Client for Linux
+           Initial release of the Microsoft Teams client for Linux.
+          EOF
+
+          chmod 755 teams-deb/DEBIAN
+          chmod 644 teams-deb/DEBIAN/control
+          chmod -R 755 teams-deb/opt/teams
+
+      - name: Build deb file
+        run: |
+          VERSION=${GITHUB_REF_NAME#v}
+          dpkg-deb --build teams-deb
+          mv teams-deb.deb teams-linux_${VERSION}_amd64.deb
+
+      - name: Upload deb to GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: teams-linux_*_amd64.deb
